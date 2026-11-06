@@ -34,3 +34,14 @@ select = ["E", "F", "I", "B", "UP"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+# Versão alvo do Python
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+# Regras ativas (E/W = Erros/Avisos normais, F = Erros lógicos do Pyflakes, I = Organizar Imports)
+select = ["E", "W", "F", "I"]
+# Ignorar regras específicas se necessário
+ignore = []
