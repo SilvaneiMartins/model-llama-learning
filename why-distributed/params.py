@@ -5,11 +5,14 @@ from models import HUGGING_FACE_PARAMS, MODELS
 
 from martins_llama.model import Llama
 
+
 def shape(t: torch.Tensor) -> str:
     return " × ".join(f"{d:,}" for d in t.shape)
 
+
 def row(name: str, dims: str, count: int, indent: int = 0) -> None:
     print(f"  {' ' * indent}{name:<{30 - indent}} {dims:<22} {count:>16,}")
+
 
 def main():
     parser = argparse.ArgumentParser()

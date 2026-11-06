@@ -6,8 +6,10 @@ from martins_llama.memory import num_params, training_bytes
 
 SECONDS_PER_DAY = 86400
 
+
 def duration(days: float) -> str:
     return f"{days / 365:,.0f} years" if days > 365 else f"{days:,.1f} days"
+
 
 def main():
     peak = GPU_PEAK_FLOPS / 1e12

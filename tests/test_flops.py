@@ -10,17 +10,21 @@ CONFIG = LlamaConfig(max_position_embeddings=128)
 SEQ, BATCH = 128, 2
 
 
-def count(fn) -> int:
+def count(fn, *, linear_only: bool = False) -> int:
     counter = FlopCounterMode(display=False)
     with counter:
         fn()
+    if linear_only:
+        # Exclude attention operations from the linear projection count.
+        counts = counter.get_flop_counts()["Global"]
+        return sum(counts.get(op, 0) for op in (torch.ops.aten.mm, torch.ops.aten.addmm))
     return counter.get_total_flops()
 
 
 def test_matmul_flops_are_six_per_weight_per_token():
     model = Llama(CONFIG)
     ids = torch.randint(0, CONFIG.vocab_size, (BATCH, SEQ + 1))
-    measured = count(lambda: loss_fn(model(ids[:, :-1]), ids[:, 1:]).backward())
+    measured = count(lambda: loss_fn(model(ids[:, :-1]), ids[:, 1:]).backward(), linear_only=True)
     assert measured == 6 * matmul_params(CONFIG) * BATCH * SEQ
 
 

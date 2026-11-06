@@ -16,6 +16,7 @@ CONFIG = LlamaConfig(
     max_position_embeddings=32,
 )
 
+
 def hf_pair():
     transformers = pytest.importorskip("transformers")
     hf_config = transformers.LlamaConfig(
@@ -37,11 +38,13 @@ def hf_pair():
     ours.load_state_dict(hf_to_dtrain(hf.state_dict()), strict=True)
     return hf, ours
 
+
 def test_logits_match_transformers():
     hf, ours = hf_pair()
     ids = torch.randint(0, CONFIG.vocab_size, (2, 32), generator=torch.Generator().manual_seed(1))
     with torch.no_grad():
         torch.testing.assert_close(ours(ids), hf(ids).logits, rtol=1e-5, atol=1e-5)
+
 
 def test_gradients_match_transformers():
     hf, ours = hf_pair()
@@ -53,8 +56,10 @@ def test_gradients_match_transformers():
     for name, p in ours.named_parameters():
         torch.testing.assert_close(p.grad, hf_grads[name], rtol=1e-5, atol=1e-6)
 
+
 def test_param_count_formula():
     assert num_params(CONFIG) == sum(p.numel() for p in Llama(CONFIG).parameters())
+
 
 def test_llama3_8b_param_count():
     config = LlamaConfig(
