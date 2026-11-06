@@ -4,7 +4,7 @@ import math
 import torch
 from models import GPU_MEMORY, MODELS
 
-from dtrain.memory import num_params
+from martins_llama.memory import num_params
 
 GB = 1e9
 

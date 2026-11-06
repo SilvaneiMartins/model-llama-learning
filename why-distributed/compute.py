@@ -1,17 +1,16 @@
-
 import torch
 from models import GPU_PEAK_FLOPS, MFU, MODELS, REPORTED_GPU_HOURS, SEQ_LENGTH, TOKENS
 from torch.utils.flop_counter import FlopCounterMode
 
-from dtrain.flops import (
+from martins_llama.flops import (
     attention_flops_per_token,
     embedding_params,
     matmul_params,
     norm_params,
 )
-from dtrain.memory import num_params
-from dtrain.model import Llama, LlamaConfig
-from dtrain.train import loss_fn
+from martins_llama.memory import num_params
+from martins_llama.model import Llama, LlamaConfig
+from martins_llama.train import loss_fn
 
 def measured(fn) -> int:
     counter = FlopCounterMode(display=False)

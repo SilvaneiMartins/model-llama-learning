@@ -1,4 +1,4 @@
-from dtrain.model import LlamaConfig
+from martins_llama.model import LlamaConfig
 
 MODELS = {
     "Llama 3 8B": LlamaConfig(

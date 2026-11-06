@@ -5,8 +5,8 @@ from models import MODELS
 from tokenizers import Tokenizer
 from torch.utils.flop_counter import FlopCounterMode
 
-from dtrain.flops import matmul_params
-from dtrain.model import Llama
+from martins_llama.flops import matmul_params
+from martins_llama.model import Llama
 
 TOKENIZER = "NousResearch/Meta-Llama-3-8B"
 
@@ -123,7 +123,7 @@ def main():
     print(
         f"   per token: {(2 * weights * t + attention) / t / 1e9:.1f} GFLOPs, 2 per matmul weight"
     )
-    print("   O treinamento acrescenta a passagem reversa — o dobro da passagem direta —, totalizando 6 operações por peso, por token.")
+    print("   Training adds the backward pass, twice the forward: 6 per weight per token.")
 
 
 if __name__ == "__main__":
