@@ -3,7 +3,7 @@ import argparse
 import torch
 from models import HUGGING_FACE_PARAMS, MODELS
 
-from dtrain.model import Llama
+from martins_llama.model import Llama
 
 def shape(t: torch.Tensor) -> str:
     return " × ".join(f"{d:,}" for d in t.shape)

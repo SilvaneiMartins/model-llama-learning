@@ -1,9 +1,8 @@
-
 import math
 
 from models import GPU_MEMORY, GPU_PEAK_FLOPS, MFU, MODELS, REPORTED_GPU_HOURS, TOKENS
 
-from dtrain.memory import num_params, training_bytes
+from martins_llama.memory import num_params, training_bytes
 
 SECONDS_PER_DAY = 86400
 
