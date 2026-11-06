@@ -16,10 +16,8 @@ def main():
     parser.add_argument("--model", choices=list(MODELS), default="Llama 3 8B")
     name = parser.parse_args().model
     config = MODELS[name]
-    
     with torch.device("meta"):
         model = Llama(config)
-    
     params = dict(model.named_parameters())
 
     print(f"{name}")
@@ -29,12 +27,10 @@ def main():
     print(f"MLP {c.intermediate_size:,} · vocabulary {c.vocab_size:,}\n")
     print(f"  {'':<30} {'shape (out × in)':<22} {'parameters':>16}")
     row("embedding", shape(params["embedding.weight"]), params["embedding.weight"].numel())
-    print("  uma camada de decodificador")
+    print("  one decoder layer")
     layer = {n.split(".", 2)[2]: p for n, p in params.items() if n.startswith("decoder_layers.0.")}
-    
     for n, p in layer.items():
         row(n.removesuffix(".weight"), shape(p), p.numel(), indent=2)
-    
     per_layer = sum(p.numel() for p in layer.values())
     row("layer total", "", per_layer, indent=2)
     layers = config.num_hidden_layers
@@ -43,9 +39,8 @@ def main():
     row("final_proj", shape(params["final_proj.weight"]), params["final_proj.weight"].numel())
     total = sum(p.numel() for p in params.values())
     row("total", "", total)
-    
     print(
-        f"\n  Metadados de safetensors do Hugging Face             {HUGGING_FACE_PARAMS[name]:>16,}"
+        f"\n  Hugging Face safetensors metadata                    {HUGGING_FACE_PARAMS[name]:>16,}"
     )
 
     groups = {
@@ -54,9 +49,7 @@ def main():
         "embedding + final_proj": lambda n: n.startswith(("embedding", "final_proj")),
         "RMSNorm weights": lambda n: "norm" in n,
     }
-    
-    print("\n  onde os parâmetros são")
-    
+    print("\n  where the parameters are")
     for label, match in groups.items():
         count = sum(p.numel() for n, p in params.items() if match(n))
         share = f"{count / total:.1%}" if count / total >= 0.001 else f"{count / total:.3%}"
@@ -65,7 +58,6 @@ def main():
     q = layer["attention.q_proj.weight"].numel()
     k = layer["attention.k_proj.weight"].numel()
     shared = f"{c.num_attention_heads} query heads share {c.num_key_value_heads} key/value heads"
-    
     print(f"\n  k_proj and v_proj are {q // k}× smaller than q_proj: {shared}")
 
 

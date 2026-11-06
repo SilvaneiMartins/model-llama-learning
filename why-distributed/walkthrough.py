@@ -10,8 +10,10 @@ from martins_llama.model import Llama
 
 TOKENIZER = "NousResearch/Meta-Llama-3-8B"
 
+
 def dims(shape) -> str:
     return " × ".join(f"{d:,}" for d in shape)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -74,19 +76,16 @@ def main():
         print(f"   {label:<17} {text:<49} {shown:>15}")
 
     head_dim = h // heads
-    
     note("input_layernorm", f"rescale each row, {h:,} learned scales")
     linear("q_proj", "attention.q_proj")
     linear("k_proj", "attention.k_proj")
     linear("v_proj", "attention.v_proj")
     kv = config.num_key_value_heads
-    
     note(
         "share k, v",
         f"{kv} key/value heads, each used by {heads // kv} of {heads} query heads",
         kind="copy",
     )
-    
     pair = f"{t} × {head_dim} · ({t} × {head_dim})ᵀ"
     note("scores", f"{heads} heads, {pair} → {heads} × {t} × {t}", 2 * t * t * h)
     note("mix values", f"{heads} × {t} × {t} · {t} × {head_dim} → {t} × {h:,}", 2 * t * t * h)
@@ -116,10 +115,8 @@ def main():
         ("total", 2 * weights * t + attention),
         ("PyTorch's FLOP counter, same forward pass", counter.get_total_flops()),
     ]
-    
     for label, value in rows:
         print(f"   {label:<48} {value:>17,}")
-    
     print(
         f"   per token: {(2 * weights * t + attention) / t / 1e9:.1f} GFLOPs, 2 per matmul weight"
     )
