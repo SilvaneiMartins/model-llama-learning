@@ -8,7 +8,11 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=1.26", "torch>=2.14"]
 
 [dependency-groups]
-dev = ["pytest>=8", "ruff>=0.6", "transformers>=5"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+    "transformers>=5",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -27,10 +31,11 @@ explicit = true
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+ignore = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
